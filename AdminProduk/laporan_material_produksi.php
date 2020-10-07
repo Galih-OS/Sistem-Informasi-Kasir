@@ -1,0 +1,66 @@
+<h1 style="text-align:center;">Laporan Permintaan Material Produksi</h1><hr/>
+<?php
+	include '../include/connect.php';
+	
+	$querySELECT = "SELECT *
+					FROM permintaan_produksi WHERE status ='accept' ";
+	$exetabel = mysql_query($querySELECT);
+	$no = 1;
+	echo "<table border='1' align='center' width='80%'>";
+	echo "	<tr align='center'>
+				<td>No.</td>
+				<td>No. Transaksi</td>
+				<td>Tanggal</td>
+				<td>Di Setujui Oleh</td>
+				<td>Permintaan Oleh</td>
+				<td>Total Item</td>
+				<td>Aksi</td>
+			</tr>
+			";
+	while($row = mysql_fetch_assoc($exetabel)){
+		
+	echo "	<tr align='center'>
+				<form action='' method='POST'>
+				<td><input style='text-align:center' size='3' read-only value='".$no."'></td>
+				<td><input style='text-align:center' size='3' read-only name='id_permintaan_prod' value='".$row['id_permintaan_prod']."'></td>
+				<td><input style='text-align:center' size='15' read-only name='tgl_permintaan' value='".$row['tgl_permintaan']."'></td>
+				<td><input style='text-align:center' size='3' read-only name='id_pegawai' value='".$row['id_pegawai']."'></td>
+				<td><input style='text-align:center' size='10' read-only name='id_peminta' value='".$row['id_peminta']."'></td>
+				<td><input style='text-align:center' size='10' read-only name='total_item' value='".$row['total_item']."'></td>
+				<td><input type='submit' name='detail' value='View Detail'></td>";
+	echo "
+				</form>
+			</tr>";
+	$no++;
+	}
+	echo "</table>";
+?>
+<?php
+if(isset($_POST['detail']))
+{
+?>
+	<table border="1" align="center">
+		<tr>
+			<td colspan="3">No. Penjualan : <?php echo $_POST[id_permintaan_prod] ;?> - Tanggal : <?php echo $_POST[tgl_permintaan] ;?></td>
+		</tr>
+		<tr>
+			<td>ID Material</td>
+			<td>Kuantitas</td>
+		</tr>
+<?php
+	include '../include/connect.php';
+	$querySELECT = "SELECT * FROM detail_permintaan_produksi WHERE id_permintaan_prod = '".$_POST[id_permintaan_prod]."' ";
+	$exetabel = mysql_query($querySELECT);
+	while($list = mysql_fetch_assoc($exetabel)){
+?>
+		<tr>
+			<td><?php echo $list['id_bahan'] ;?></td>
+			<td><?php echo $list['kuantitas'] ;?></td>
+		</tr>
+<?php
+	}
+?>
+	</table>
+<?php
+}
+?>
